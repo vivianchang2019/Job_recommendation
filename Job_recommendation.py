@@ -1,4 +1,5 @@
 from sklearn.metrics.pairwise import cosine_similarity
+from gensim.models import Word2Vec
 from joblib import dump, load
 import pickle
 import jieba
@@ -118,41 +119,55 @@ def mongo_select_jobs(category, area=None, workExp=None, edu=None):
     return dict_data
 
 
-def turn_content_BOW(content):  # 將結巴後的斷詞，利用CountVectorizer轉換減少字詞數量
+def turn_content_BOW(content):
+    # 將結巴後的斷詞，利用CountVectorizer轉換，確認字詞在模型內
     X_content = [ " ".join(content)]
     vectorizer = pickle.load(open("model/vectorizer.pickel", "rb"))
     transform_content = vectorizer.transform(X_content)
-    X_content_array = transform_content.toarray()
-    return X_content_array
+    X_content = vectorizer.inverse_transform(transform_content)[0].tolist()
+    return X_content
 
 
-def compute_similarity(cv_BOW, job_id, job_jieba_data):
-    job_BOW = turn_content_BOW(job_jieba_data)
-    job_prob = cosine_similarity(cv_BOW, job_BOW)
-    job_prob = round(job_prob.tolist()[0][0], 6)
 
-    return job_prob, job_id
+def compute_similarity(cv_BOW, job_BOW, model_train):
+    # 計算 Word2Vec similarity
+    job_prob = model_train.wv.n_similarity(cv_BOW, job_BOW)
+    return job_prob
 
 
-def show_recommendation_result(cv_clean, jobs_query):
+def show_recommendation_result(cv_clean, jobs_query, model_train):
+    # 定義 recommendation function，顯示10筆結果
     cv_BOW = turn_content_BOW(cv_clean)
 
+    # 將職缺資料轉成 Word2Vec格式
+    lst_jobs_content = []
+    lst_jobs_url = []
+
+    for k, v in jobs_query.items():
+        split_data = v['concate_jieba'][0].split(',')
+        lst_jobs_content.append(split_data)
+        lst_jobs_url.append(k)
+
+    # 計算所有CV與職缺的similarity，排序後儲存10筆相關度最高職缺
     dict_prob_id = {}
 
-    for i, j in jobs_query.items():
-        job_jieba_data = j['concate_jieba']
-        similarity = compute_similarity(cv_BOW, i, job_jieba_data)
-        dict_prob_id[similarity[0]] = similarity[1]
+    for i, j in enumerate(lst_jobs_content):
+        job_url = lst_jobs_url[i]
+        job_prob = compute_similarity(cv_BOW, j, model_train)
+        dict_prob_id[job_prob] = job_url
         result = [(k, dict_prob_id[k]) for k in sorted(dict_prob_id.keys(), reverse=True)[0:10]]
 
+    # 顯示結果為list
     list_ten_result = []
 
-    for i, j in result:
-        data = jobs_query[j]
-        lst_result = [i, data['Job_Name'], data['Company'], data['Job_Description'], j]
+    for i in result:
+        prob, url = i[0], i[1]
+        job_dict = jobs_query[url]
+        lst_result = [prob, job_dict['Job_Name'], job_dict['Company'], job_dict['Job_Description'], url]
         list_ten_result.append(lst_result)
 
-    return (list_ten_result)
+    return list_ten_result
+
 
 
 def main():
@@ -196,14 +211,16 @@ def main():
     input_cv_category = cv_category_predict(input_cv_clean)
 
     # 3. 利用預測分類結果，與使用者輸入工作條件，從mongoDB撈取職缺  --------------------------
-
     jobs_query = mongo_select_jobs(input_cv_category, input_work_area, input_work_exp, input_edu)
 
-    # 4. 將職缺轉換成BOW，計算CV與職缺的相似度，推薦相似度最近的10筆工作  ------------------------------------
+    # 4. 利用Word2Vec，計算CV與職缺的相似度，推薦相似度最近的10筆工作  ------------------------------------
+    model_train = Word2Vec.load('model/Word2Vec.model')  # 載入訓練好的Word2Vec模型
+    recommendation = show_recommendation_result(input_cv_clean, jobs_query, model_train)  # 計算推薦結果，顯示前10筆推薦
 
-    final_result = show_recommendation_result(input_cv_clean, jobs_query)
-    print(final_result)
-
+    # 5. 顯示推薦結果
+    for i, j in enumerate(recommendation):
+        print(i, j[1], j[2])
+        print('-' * 20)
 
 if __name__ == '__main__':
     main()

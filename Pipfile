@@ -11,6 +11,7 @@ joblib = "*"
 jieba = "*"
 pymongo = "*"
 pandas = "*"
+gensim = "*"
 
 [requires]
 python_version = "3.7"

@@ -23,13 +23,13 @@
 
 > 1. 使用者輸入CV，以及工作條件
 
-> 2. 清洗CV，轉換成BOW， 丟入訓練模型，顯示預測分類結果。
+> 2. 清洗CV，轉換成BOW， 丟入sklearn訓練模型，顯示預測分類結果。
 
 > 3. 利用預測分類結果，與使用者輸入工作條件，從mongoDB撈取職缺
 
-> 4. 將職缺轉換成BOW
+> 4. 將CV轉換成Word2Vec可用BOW
 
-> 5. 計算CV與職缺的相似度，推薦相似度最近的10筆工作
+> 5. 計算CV與職缺的相似度，(使用Word2Vec模型)推薦相似度最近的10筆工作
 
 --------------------------------------------------------------
 此repository的Jupyter Notebook檔案顯示(找職缺)功能的製作詳細過程，流程如下:
@@ -43,8 +43,12 @@
 #### 步驟3 - 建立文本分類模型
     代碼展示: "03_Build_text_classification_model.ipynb"
 
-#### 步驟4 - 建立推薦系統
+#### 步驟4 - 建立推薦系統 by cosine similarity
     代碼展示: "04_Build_recommendation_by_Similarity.ipynb"
+
+#### 步驟6 - 建立推薦系統 by Word2Vec
+    代碼展示: "05_Build_recommendation_by_Word2Vec.ipynb"
+
 
 --------------------------------------------------------------
 
