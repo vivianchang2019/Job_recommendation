@@ -220,6 +220,7 @@ def main():
     # 5. 顯示推薦結果
     for i, j in enumerate(recommendation):
         print(i, j[1], j[2])
+        print(j[3])
         print('-' * 20)
 
 if __name__ == '__main__':
