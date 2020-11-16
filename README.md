@@ -11,8 +11,8 @@
 
 *注意: 此作品使用繁體中文做為文本訓練，因此用戶輸入繁體中文履歷效果比較好。 <br>
 
-功能展示影片: (製作中) <br>
-功能展示PPT: [勇往職前PPT](https://docs.google.com/presentation/d/1bxf6blvl5OK7HTN-d9_5F_2EXNDgBhjVYbUTWAQVWjg/edit?usp=sharing "勇往職前PPT")(製作中) <br>
+功能展示影片: [勇往職前Demo影片](https://youtu.be/FiGBseq4icc "勇往職前Demo影片") <br>
+功能展示PPT: [勇往職前PPT](https://drive.google.com/file/d/1DJY-zrJPKybXz23GJexr1ou182ig2lFg/view?usp=sharing "勇往職前PPT") <br>
 功能展示網址: [找職缺網址](http://for-workers.herokuapp.com/html2 "找職缺網址") <br>
 
 --------------------------------------------------------------
