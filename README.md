@@ -13,7 +13,7 @@
 
 功能展示影片: [勇往職前Demo影片](https://youtu.be/FiGBseq4icc "勇往職前Demo影片") <br>
 功能展示PPT: [勇往職前PPT](https://drive.google.com/file/d/1DJY-zrJPKybXz23GJexr1ou182ig2lFg/view?usp=sharing "勇往職前PPT") 負責第二部分: 文字工程 <br>
-功能展示網址: [找職缺網址](http://for-workers.herokuapp.com/html2 "找職缺網址") <br>
+功能展示網址: [找職缺網址](http://for-workers.herokuapp.com/html2 "找職缺網址"), [找履歷網址](http://for-company-104.herokuapp.com/forcompany "找履歷網址")  <br>
 
 --------------------------------------------------------------
 ####  完整的(找職缺)功能執行代碼為: "Job_recommendation.py"
